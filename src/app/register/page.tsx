@@ -1,35 +1,24 @@
 "use client";
 import assets from '@/assets';
+import PHForm from '@/components/Forms/PHForm';
+import PHInput from '@/components/Forms/PHInput';
 import { registerPatient } from '@/services/actions/registerPatient';
+import { userLogin } from '@/services/actions/userLogin';
+import { storeUserInfo } from '@/services/auth.service';
 import { ModifyPayload } from '@/utils/ModifyPayload';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm, SubmitHandler, FieldValues } from "react-hook-form"
 import { toast } from 'sonner';
 
-interface IPatientData {
-    name: string;
-    email: string;
-    contactNumber: string;
-    address: string;
-}
 
-interface IPatientRegisterFormData {
-    password: string;
-    patient: IPatientData;
-}
 const RegisterPage = () => {
     const router = useRouter()
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm<IPatientRegisterFormData>()
-    const onSubmit: SubmitHandler<IPatientRegisterFormData> = async (values) => {
+
+    const handleRegister = async (values: FieldValues) => {
         const data = ModifyPayload(values)
         // console.log(data)
 
@@ -37,7 +26,11 @@ const RegisterPage = () => {
             const res = await registerPatient(data)
             if (res?.data?.id) {
                 toast.success(res?.message)
-                router.push("/login")
+                const result = await userLogin({ password: values.password, email: values.patient.email });
+                if (result?.data?.accessToken) {
+                    storeUserInfo({ accessToken: result?.data?.accessToken });
+                    router.push('/');
+                }
             }
         } catch (err: any) {
             console.error(err.message)
@@ -79,51 +72,49 @@ const RegisterPage = () => {
                         </Box>
                     </Stack>
                     <Box>
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                        <PHForm onSubmit={handleRegister}>
                             <Grid container spacing={3} my={2}>
                                 <Grid item md={12}>
-                                    <TextField
+                                    <PHInput
                                         label="Name"
-                                        type="text"
-                                        size="small"
                                         fullWidth={true}
-                                        {...register("patient.name")}
+                                        name="patient.name"
+                                        required={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
+                                    <PHInput
                                         label="Email"
                                         type="email"
-                                        size="small"
                                         fullWidth={true}
-                                        {...register("patient.email")}
+                                        name="patient.email"
+                                        required={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
+                                    <PHInput
                                         label="Password"
                                         type="password"
-                                        size="small"
                                         fullWidth={true}
-                                        {...register("password")}
+                                        name="password"
+                                        required={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
+                                    <PHInput
                                         label="Contact Number"
                                         type="tel"
-                                        size="small"
                                         fullWidth={true}
-                                        {...register("patient.contactNumber")}
+                                        name="patient.contactNumber"
+                                        required={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
+                                    <PHInput
                                         label="Address"
-                                        type="text"
-                                        size="small"
                                         fullWidth={true}
-                                        {...register("patient.address")}
+                                        name="patient.address"
+                                        required={true}
                                     />
                                 </Grid>
                             </Grid>
@@ -136,7 +127,7 @@ const RegisterPage = () => {
                             >
                                 Register
                             </Button>
-                        </form>
+                        </PHForm>
                         <Typography component="p" fontWeight={300}>
                             Do you already have an account?
                             <Link className="text-red-400" href="/login">

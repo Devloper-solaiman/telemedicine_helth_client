@@ -1,42 +1,41 @@
 "use client"
+
 import assets from '@/assets';
-import { storeUserInfo } from '@/services/actions/auth.service';
+import { storeUserInfo } from '@/services/auth.service';
 import { userLogin } from '@/services/actions/userLogin';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import PHForm from '@/components/Forms/PHForm';
+import PHInput from '@/components/Forms/PHInput';
+import { z } from 'zod';
 
-export type FormValues = {
-    email: string;
-    password: string
-}
-
-
+export const validationSchema = z.object({
+    email: z.string().email("please enter a valid Email address!!"),
+    password: z.string().min(6, "Must be at letest 6 carecters")
+})
 
 const LoginPage = () => {
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm<FormValues>()
-    const onSubmit: SubmitHandler<FormValues> = async (values) => {
+    const router = useRouter()
+    const handleLogin = async (values: FieldValues) => {
         // console.log(values);
-
-
         try {
-            const res = await userLogin(values)
+            const res = await userLogin(values);
             if (res?.data?.accessToken) {
-                storeUserInfo({ accessToken: res?.data?.accessToken })
+                toast.success(res?.message);
+                storeUserInfo({ accessToken: res?.data?.accessToken });
+                router.push('/');
             }
-
+            toast.success(res.success)
         } catch (err: any) {
-            console.error(err.message)
+            toast.error(err.message);
+            console.error(err.message);
         }
-    }
-
+    };
     return (
         <Container>
             <Stack
@@ -72,24 +71,24 @@ const LoginPage = () => {
                         </Box>
                     </Stack>
                     <Box>
-                        <form onSubmit={handleSubmit(onSubmit)}>
+                        <PHForm onSubmit={handleLogin}>
                             <Grid container spacing={3} my={2}>
                                 <Grid item md={6}>
-                                    <TextField
+                                    <PHInput
+                                        name='email'
                                         label="Email"
                                         type="email"
-                                        size="small"
                                         fullWidth={true}
-                                        {...register("email")}
+                                        required={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
+                                    <PHInput
+                                        name='password'
                                         label="Password"
                                         type="password"
-                                        size="small"
                                         fullWidth={true}
-                                        {...register("password")}
+                                        required={true}
                                     />
                                 </Grid>
                             </Grid>
@@ -105,9 +104,9 @@ const LoginPage = () => {
                             >
                                 Login
                             </Button>
-                        </form>
+                        </PHForm>
                         <Typography component="p" fontWeight={300}>
-                            Dont have an account?{" "}
+                            Don&apos;t have an account?{" "}
                             <Link className="text-red-400" href="/register">
                                 Create an account
                             </Link>
