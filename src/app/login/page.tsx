@@ -6,13 +6,14 @@ import { userLogin } from '@/services/actions/userLogin';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import { useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import PHForm from '@/components/Forms/PHForm';
 import PHInput from '@/components/Forms/PHInput';
 import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export const validationSchema = z.object({
     email: z.string().email("please enter a valid Email address!!"),
@@ -20,6 +21,7 @@ export const validationSchema = z.object({
 })
 
 const LoginPage = () => {
+    const [error, setError] = useState("")
     const router = useRouter()
     const handleLogin = async (values: FieldValues) => {
         // console.log(values);
@@ -29,10 +31,11 @@ const LoginPage = () => {
                 toast.success(res?.message);
                 storeUserInfo({ accessToken: res?.data?.accessToken });
                 router.push('/');
+            } else {
+                setError(res.message)
             }
-            toast.success(res.success)
+
         } catch (err: any) {
-            toast.error(err.message);
             console.error(err.message);
         }
     };
@@ -70,8 +73,27 @@ const LoginPage = () => {
                             </Typography>
                         </Box>
                     </Stack>
+
+                    {error && <Box>
+                        <Typography sx={{
+                            backgroundColor: "red",
+                            padding: "1px",
+                            color: "white",
+                            borderRadius: "5px"
+                        }}>
+                            {error}
+                        </Typography>
+                    </Box>}
+
+
                     <Box>
-                        <PHForm onSubmit={handleLogin}>
+                        <PHForm onSubmit={handleLogin}
+                            resolver={zodResolver(validationSchema)}
+                            defaultValues={{
+                                email: "",
+                                password: "",
+                            }}
+                        >
                             <Grid container spacing={3} my={2}>
                                 <Grid item md={6}>
                                     <PHInput
@@ -79,7 +101,6 @@ const LoginPage = () => {
                                         label="Email"
                                         type="email"
                                         fullWidth={true}
-                                        required={true}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
@@ -88,7 +109,7 @@ const LoginPage = () => {
                                         label="Password"
                                         type="password"
                                         fullWidth={true}
-                                        required={true}
+
                                     />
                                 </Grid>
                             </Grid>
@@ -107,7 +128,7 @@ const LoginPage = () => {
                         </PHForm>
                         <Typography component="p" fontWeight={300}>
                             Don&apos;t have an account?{" "}
-                            <Link className="text-red-400" href="/register">
+                            <Link href="/register">
                                 Create an account
                             </Link>
                         </Typography>
