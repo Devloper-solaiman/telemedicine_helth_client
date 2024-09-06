@@ -1,41 +1,21 @@
-import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { Box, List, Stack, Typography } from '@mui/material';
+
 import Image from 'next/image';
 import assets from '@/assets';
 import Link from 'next/link';
+import { drawerItems } from '@/utils/drawerItems';
+import { UserRole } from '@/types';
+import SideBarItems from './SideBarItems';
+import { getUserInfo } from '@/services/auth.service';
+import { useEffect, useState } from 'react';
 
 const SideBar = () => {
-    const drawer = (
-        <div>
+    const [userRole, setUserRole] = useState("")
+    useEffect(() => {
+        const { role } = getUserInfo()
+        setUserRole(role)
+    }, [])
 
-            <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </div>
-    );
 
     return (
         <Box>
@@ -56,7 +36,11 @@ const SideBar = () => {
                 <Image src={assets.svgs.logo} width={40} alt='logo' />
                 <Typography variant='h6' component="h1">Telemedicine</Typography>
             </Stack>
-            {drawer}
+            <List>
+                {drawerItems(userRole as UserRole).map((item, index) => (
+                    <SideBarItems key={index} item={item} />
+                ))}
+            </List>
         </Box>
     );
 };

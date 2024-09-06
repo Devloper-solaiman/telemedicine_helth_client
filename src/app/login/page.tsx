@@ -3,11 +3,11 @@
 import assets from '@/assets';
 import { storeUserInfo } from '@/services/auth.service';
 import { userLogin } from '@/services/actions/userLogin';
-import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { FieldValues } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import PHForm from '@/components/Forms/PHForm';
@@ -30,7 +30,7 @@ const LoginPage = () => {
             if (res?.data?.accessToken) {
                 toast.success(res?.message);
                 storeUserInfo({ accessToken: res?.data?.accessToken });
-                router.push('/');
+                router.push('/dashboard');
             } else {
                 setError(res.message)
             }

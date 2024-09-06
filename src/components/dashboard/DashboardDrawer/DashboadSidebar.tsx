@@ -15,8 +15,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import SideBar from '../SideBar/SideBar';
-import { Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
-import assets from '@/assets';
+import { Avatar, Container, Menu, MenuItem, Tooltip } from '@mui/material';
+import AdbIcon from '@mui/icons-material/Adb';
 
 const drawerWidth = 240;
 
@@ -67,53 +67,55 @@ export default function SidebarDrawer({ children }: { children: React.ReactNode 
                     borderBottom: "1px solid lightgray"
                 }}
             >
-                <Toolbar>
-                    <IconButton
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        sx={{ mr: 2, display: { sm: 'none' }, color: "primary.main" }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Box>
-                        <Typography variant="h6" noWrap component="div" color="gray">
-                            MD Slolaiman
-                        </Typography>
-                        <Typography variant="h6" noWrap component="div" color="primary.main">
-                            Welcome to Telemedicine
-                        </Typography>
-                    </Box>
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src={assets.images.doctor1} />
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{ mt: '45px' }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
+                <Container maxWidth="xl">
+                    <Toolbar>
+                        <IconButton
+                            aria-label="open drawer"
+                            edge="start"
+                            onClick={handleDrawerToggle}
+                            sx={{ mr: 2, display: { sm: 'none' }, color: "primary.main" }}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
-                </Toolbar>
+                            <MenuIcon />
+                        </IconButton>
+                        <Box sx={{ flexGrow: 1 }}>
+                            <Typography variant="h6" noWrap component="div" color="gray">
+                                MD Slolaiman
+                            </Typography>
+                            <Typography variant="h6" noWrap component="div" color="primary.main">
+                                Welcome to Telemedicine
+                            </Typography>
+                        </Box>
+                        <Box sx={{ flexGrow: 0 }}>
+                            <Tooltip title="Open settings">
+                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                    <Avatar alt="Solaiman" src='https://i.ibb.co/MMNjr25/download.jpg' />
+                                </IconButton>
+                            </Tooltip>
+                            <Menu
+                                sx={{ mt: '45px' }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleCloseUserMenu}
+                            >
+                                {settings.map((setting) => (
+                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                        <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </Box>
+                    </Toolbar>
+                </Container>
             </AppBar>
             <Box
                 component="nav"
