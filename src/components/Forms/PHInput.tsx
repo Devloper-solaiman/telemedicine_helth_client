@@ -7,7 +7,7 @@ type TInputProps = {
     label?: string;
     type?: string;
     size?: "small" | "medium"
-    fullWidth: boolean
+    fullWidth?: boolean
     sx?: SxProps;
     placeholder?: string;
     required?: boolean
