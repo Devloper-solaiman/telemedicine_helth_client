@@ -3,27 +3,22 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import SideBar from '../SideBar/SideBar';
 import { Avatar, Container, Menu, MenuItem, Tooltip } from '@mui/material';
-import AdbIcon from '@mui/icons-material/Adb';
+import { useRouter } from 'next/navigation';
+import { getUserInfo, removeUser } from '@/services/auth.service';
+import { useEffect, useState } from 'react';
 
 const drawerWidth = 240;
 
-
-
 export default function SidebarDrawer({ children }: { children: React.ReactNode }) {
 
+    const [userInfo, setUserInfo] = useState<{ role: string; email: string } | null>(null);
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -48,12 +43,24 @@ export default function SidebarDrawer({ children }: { children: React.ReactNode 
             setMobileOpen(!mobileOpen);
         }
     };
+    const router = useRouter()
+    const handleLogout = () => {
+        removeUser()
+        router.push("/")
+    }
+    const settings = ['Profile', 'Logout'];
 
-    const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                setUserInfo(getUserInfo)
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        };
 
-    // Remove this const when copying and pasting into your project.
-
-
+        fetchUserInfo();
+    }, []);
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -79,7 +86,7 @@ export default function SidebarDrawer({ children }: { children: React.ReactNode 
                         </IconButton>
                         <Box sx={{ flexGrow: 1 }}>
                             <Typography variant="h6" noWrap component="div" color="gray">
-                                MD Slolaiman
+                                {userInfo?.email || 'Guest'} {"("}{userInfo?.role}{")"}
                             </Typography>
                             <Typography variant="h6" noWrap component="div" color="primary.main">
                                 Welcome to Telemedicine
@@ -108,8 +115,11 @@ export default function SidebarDrawer({ children }: { children: React.ReactNode 
                                 onClose={handleCloseUserMenu}
                             >
                                 {settings.map((setting) => (
-                                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                        <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                                    <MenuItem
+                                        key={setting}
+                                        onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}
+                                    >
+                                        <Typography sx={{ textAlign: 'center' }}>{setting} </Typography>
                                     </MenuItem>
                                 ))}
                             </Menu>
