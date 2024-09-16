@@ -15,7 +15,12 @@ const SpecialtiesPage = () => {
     const [deleteSpecialty] = useDeleteSpecialtyMutation()
 
     const handleDelete = async (id: string) => {
-        console.log(id)
+        try {
+            const res = await deleteSpecialty(id)
+            console.log(res)
+        } catch (err: any) {
+            console.error(err?.message)
+        }
     }
     const columns: GridColDef[] = [
         { field: 'title', headerName: 'Title', width: 400 },
