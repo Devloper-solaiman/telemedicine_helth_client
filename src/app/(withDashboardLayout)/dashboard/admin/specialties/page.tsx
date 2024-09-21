@@ -2,11 +2,10 @@
 import { Box, Button, CircularProgress, IconButton, Stack, TextField } from "@mui/material";
 import SpecialtyModal from "./components/SpecialistModal";
 import { useState } from "react";
-import { useDeleteSpecialtyMutation, useGetAllSpecialtiesQuery } from "@/redux/api/specialties.Api";
+import { useDeleteSpecialtyMutation, useGetAllSpecialtiesQuery } from "@/redux/api/specialtiesApi";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Image from "next/image";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { toast } from "sonner";
 
 
 const SpecialtiesPage = () => {
