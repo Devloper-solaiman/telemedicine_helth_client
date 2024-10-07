@@ -15,9 +15,10 @@ const doctorApi = baseApi.injectEndpoints({
       invalidatesTags: [tagTypes.doctor],
     }),
     getAllDoctor: build.query({
-      query: () => ({
+      query: (arg: Record<string, any>) => ({
         url: "/doctor",
         method: "GET",
+        params: arg,
       }),
       transformResponse(response: IDoctor[], meta: Imeta) {
         return {
