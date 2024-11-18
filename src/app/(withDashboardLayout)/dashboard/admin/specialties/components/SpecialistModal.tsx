@@ -19,7 +19,7 @@ const SpecialtyModal = ({ open, setOpen }: TProps) => {
     const [createSpecialty] = useCreateSpecialtyMutation()
 
     const handleFormSubmit = async (values: FieldValues) => {
-        const data = ModifyPayload(values)
+        const data:any = ModifyPayload(values)
 
         try {
             const res = await createSpecialty(data).unwrap()

@@ -11,8 +11,9 @@ import Typography from '@mui/material/Typography';
 import SideBar from '../SideBar/SideBar';
 import { Avatar, Container, Menu, MenuItem, Tooltip } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { getUserInfo, removeUser } from '@/services/auth.service';
+import { getUserInfo, isLoggedIn, removeUser } from '@/services/auth.service';
 import { useEffect, useState } from 'react';
+import { useGetSingleUserQuery } from '@/redux/api/userApi';
 
 const drawerWidth = 240;
 
@@ -43,10 +44,13 @@ export default function SidebarDrawer({ children }: { children: React.ReactNode 
             setMobileOpen(!mobileOpen);
         }
     };
+    const {data, isLoading} = useGetSingleUserQuery({})
+console.log(data)
+
     const router = useRouter()
     const handleLogout = () => {
-        removeUser()
-        router.push("/")
+        localStorage.removeItem("accessToken")
+        router.push("/login")
     }
     const settings = ['Profile', 'Logout'];
 
@@ -85,11 +89,17 @@ export default function SidebarDrawer({ children }: { children: React.ReactNode 
                             <MenuIcon />
                         </IconButton>
                         <Box sx={{ flexGrow: 1 }}>
-                            <Typography variant="h6" noWrap component="div" color="gray">
-                                {userInfo?.email || 'Guest'} {"("}{userInfo?.role}{")"}
+                            <Typography
+                             variant="body2"
+                              noWrap
+                               component="div"
+                                sx={{color:"rgba(11, 17, 52, 0.6)"}}
+                                >
+                                    Hi,{isLoading ? "Loading..." : data?.name}
+                                {/* {userInfo?.email || 'Guest'} {"("}{userInfo?.role}{")"} */}
                             </Typography>
                             <Typography variant="h6" noWrap component="div" color="primary.main">
-                                Welcome to Telemedicine
+                                Welcome to telemedicine 
                             </Typography>
                         </Box>
                         <Box sx={{ flexGrow: 0 }}>
