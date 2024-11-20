@@ -1,4 +1,5 @@
 import { authKey } from "@/constants/authkey";
+import { instance as axiosInstance } from "@/helpers/axios/axiosInstance";
 import { decodedToken } from "@/utils/jwt";
 import { getFromLocalStorage, removeFromLocalStorage, SetToLocalStorage } from "@/utils/local-storage";
 
@@ -33,4 +34,13 @@ export const isLoggedIn = ()=>{
 
 export const removeUser = ()=>{
     return removeFromLocalStorage(authKey)
+}
+
+export const getNewAccessToken = async ()=>{
+    return await axiosInstance({
+        url:`${process.env.REFRESH_TOKEN}`,
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        withCredentials: true,
+    })
 }

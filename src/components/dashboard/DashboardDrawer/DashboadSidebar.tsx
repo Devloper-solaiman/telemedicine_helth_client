@@ -45,7 +45,6 @@ export default function SidebarDrawer({ children }: { children: React.ReactNode 
         }
     };
     const {data, isLoading} = useGetSingleUserQuery({})
-console.log(data)
 
     const router = useRouter()
     const handleLogout = () => {
@@ -105,7 +104,7 @@ console.log(data)
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <Avatar alt="Solaiman" src='https://i.ibb.co/MMNjr25/download.jpg' />
+                                    {isLoading?"?":<Avatar alt="Solaiman" src={data?.profilePhoto} />}
                                 </IconButton>
                             </Tooltip>
                             <Menu

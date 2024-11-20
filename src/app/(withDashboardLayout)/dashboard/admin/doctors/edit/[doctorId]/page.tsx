@@ -1,38 +1,29 @@
-import PHForm from '@/components/Forms/PHForm';
-import PHInput from '@/components/Forms/PHInput';
-import PHSelectField from '@/components/Forms/PHSelectField';
-import PHFullScreenModal from '@/components/shared/Modal/PHFullScreenModal';
-import { useCreateDoctorMutation } from '@/redux/api/doctorApi';
-import { Gender } from '@/types';
-import { ModifyPayload } from '@/utils/ModifyPayload';
-import { Button, Grid } from '@mui/material';
-import React from 'react';
-import { FieldValues } from 'react-hook-form';
-import { toast } from 'sonner';
+"use client"
 
-type TProps = {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+import PHForm from "@/components/Forms/PHForm";
+import PHInput from "@/components/Forms/PHInput";
+import PHSelectField from "@/components/Forms/PHSelectField";
+import { Gender } from "@/types";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { FieldValues } from "react-hook-form";
+
+type TParams = {
+    params: {
+        doctorId: string
+    }
 }
-
-const DoctorModal = ({ open, setOpen }: TProps) => {
-    const [createDoctor] = useCreateDoctorMutation()
+const DoctorUpdatePage = ({params}:TParams) => {
+    // console.log(params.doctorId)
     const handleFormSubmit = async (values: FieldValues) => {
-        values.doctor.experience = Number(values.doctor.experience)
-        values.doctor.apointmentFee = Number(values.doctor.apointmentFee)
-        const data = ModifyPayload(values)
+
         try {
-            const res = await createDoctor(data).unwrap()
-            console.log(res)
-            if (res?.id) {
-                toast.success("Doctor created successfully")
-                setOpen(false)
-            }
+
         } catch (err: any) {
             console.error(err)
         }
 
     }
+
     const defaultValues = {
         doctor: {
             email: "",
@@ -51,7 +42,8 @@ const DoctorModal = ({ open, setOpen }: TProps) => {
         password: ""
     }
     return (
-        <PHFullScreenModal open={open} setOpen={setOpen} title="Create New Doctor" >
+        <Box>
+            <Typography component="h5" variant="h5">update doctor info = {params.doctorId} </Typography>
             <PHForm onSubmit={handleFormSubmit} defaultValues={defaultValues}>
                 <Grid container spacing={2} sx={{ my: 5 }}>
                     <Grid item xs={12} sm={12} md={4}>
@@ -71,7 +63,7 @@ const DoctorModal = ({ open, setOpen }: TProps) => {
                             sx={{ md: 2 }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
+                    {/* <Grid item xs={12} sm={12} md={4}>
                         <PHInput
                             name='password'
                             type='password'
@@ -79,7 +71,7 @@ const DoctorModal = ({ open, setOpen }: TProps) => {
                             fullWidth={true}
                             sx={{ md: 2 }}
                         />
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={12} sm={12} md={4}>
                         <PHInput
                             name='doctor.contactNumber'
@@ -158,11 +150,11 @@ const DoctorModal = ({ open, setOpen }: TProps) => {
                         <PHFileUploader name='file' label='File Uploader' />
                     </Grid> */}
                 </Grid>
-                <Button sx={{ mt: 1 }} type='submit'>Create</Button>
+                <Button sx={{ mt: 1 }} type='submit'>Update</Button>
             </PHForm>
 
-        </PHFullScreenModal >
+        </Box>
     );
 };
 
-export default DoctorModal;
+export default DoctorUpdatePage;
