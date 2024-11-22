@@ -33,9 +33,16 @@ const TopRatedDoctors = async () => {
                             <Grid key={doctor.id} item md={4}>
                                 <Card>
                                     <Box>
-                                        <Image
-                                            src={doctor.profilePhoto}
-                                            width={500} height={100} alt="doctor" />
+                                        {doctor.profilePhoto ? (
+                                            <Image
+                                                src={doctor.profilePhoto}
+                                                width={500}
+                                                height={100}
+                                                alt="doctor"
+                                            />
+                                        ) : (
+                                            <Box sx={{ width: 500, height: 300, backgroundColor: "#f0f0f0" }} />
+                                        )}
                                     </Box>
                                     <CardContent>
                                         <Typography gutterBottom variant="h5" component="div">
