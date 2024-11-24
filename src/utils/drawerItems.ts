@@ -12,7 +12,6 @@ import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import MedicationIcon from "@mui/icons-material/Medication";
 import PaymentIcon from "@mui/icons-material/Payment";
-import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
@@ -23,7 +22,7 @@ export const drawerItems = (role: UserRole): DrawerItem[] => {
     {
        title: 'Profile',
        path: `${role}/profile`,
-       icon: PersonIcon,
+       icon: AccountCircleIcon,
     },
     {
        title: 'Change Password',
@@ -99,12 +98,8 @@ export const drawerItems = (role: UserRole): DrawerItem[] => {
           title: "Appointments",
           path: `${role}/appointments`,
           icon: BookOnlineIcon,
-        },
-        {
-          title: "My Profile",
-          path: `${role}/profile`,
-          icon: AccountCircleIcon,
-        },
+        }
+       
       );
       break;
 
@@ -131,5 +126,5 @@ export const drawerItems = (role: UserRole): DrawerItem[] => {
     default:
       break;
   }
-  return [...roleMenus];
+  return [...roleMenus, ...defaultMenus];
 };

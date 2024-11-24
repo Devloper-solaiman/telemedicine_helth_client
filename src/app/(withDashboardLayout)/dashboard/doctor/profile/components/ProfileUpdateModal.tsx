@@ -20,14 +20,8 @@ type TProps = {
  };
  
 const validationSchema = z.object({
-    experience: z.preprocess(
-       (x) => (x ? x : undefined),
-       z.coerce.number().int().optional()
-    ),
-    apointmentFee: z.preprocess(
-       (x) => (x ? x : undefined),
-       z.coerce.number().int().optional()
-    ),
+    experience: z.preprocess((x) => (x ? x : undefined), z.coerce.number().int().optional()),
+    apointmentFee: z.preprocess((x) => (x ? x : undefined),z.coerce.number().int().optional()),
     name: z.string().optional(),
     contactNumber: z.string().optional(),
     registrationNumber: z.string().optional(),

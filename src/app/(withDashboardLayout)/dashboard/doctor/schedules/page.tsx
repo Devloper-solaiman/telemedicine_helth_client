@@ -24,7 +24,7 @@ const DoctorSchedulesPage = () => {
  
     const [allSchedule, setAllSchedule] = useState<any>([]);
     const { data, isLoading } = useGetAllDoctorSchedulesQuery({ ...query });
-    console.log(data);
+   //  console.log(data);
  
     const schedules = data?.doctorSchedules;
     const meta = data?.meta;
